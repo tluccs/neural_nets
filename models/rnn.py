@@ -33,13 +33,16 @@ class RNN:
             self.model.add(Dropout(rate=dropout))
 
         self.model.add(Dense(4, activation=activation))
-        self.model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+        self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
         self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), \
                                       epochs=epochs, batch_size=batch_size)
 
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=0)
     
+    def predict(self, X_data):
+        return self.model.predict(X_data)
+
     def plot(self):
         plt.plot(self.history.history['acc'])
         plt.plot(self.history.history['val_acc'])
