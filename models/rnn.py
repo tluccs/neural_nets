@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
+
 
 from keras.models import Sequential
 from keras.layers import Dense
@@ -19,6 +21,9 @@ class RNN:
 
         # Initialize Keras model
         self.model = Sequential()
+        
+        # Keep a history of training and val accuracies, and loss
+        self.history = None
 
     def train(self, RNN_architecture=LSTM, activation="sigmoid", \
               optimizer='adam', epochs=5, batch_size=64, dropout=None):
@@ -29,7 +34,18 @@ class RNN:
 
         self.model.add(Dense(4, activation=activation))
         self.model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
-        self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), epochs=epochs, batch_size=batch_size)
+        self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), \
+                                      epochs=epochs, batch_size=batch_size)
 
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=0)
+    
+    def plot(self):
+        plt.plot(self.history.history['acc'])
+        plt.plot(self.history.history['val_acc'])
+        plt.title('Model accuracy')
+        plt.ylabel('Accuracy')
+        plt.xlabel('Epoch')
+        plt.legend(['Train', 'Val'], loc='upper left')
+        plt.show()
+        
