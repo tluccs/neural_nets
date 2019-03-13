@@ -9,4 +9,5 @@
 `python3.6 -m venv venv` 
 `source venv/bin/activate`
 3. Install all requirements by running `pip install -r requirements.txt`
-4. Now from the root folder, launch jupyter notebook in your browser by running `jupyter notebook`
+4. Make a new folder called `data` and put all of the 6 EEG datasets inside of it.
+5. Now from the root folder, launch jupyter notebook in your browser by running `jupyter notebook`
