@@ -29,13 +29,18 @@ class RNN:
               optimizer='adam', epochs=5, batch_size=64, dropout=None):
         self.model.add(RNN_architecture(200))
 
-        if dropout != None:
+        if dropout is not None:
             self.model.add(Dropout(rate=dropout))
 
         self.model.add(Dense(4, activation=activation))
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
-        self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), \
+        
+        if self.X_val is not None:
+            self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), \
                                       epochs=epochs, batch_size=batch_size)
+        else:
+            self.history = self.model.fit(self.X_train, self.y_train, epochs=epochs, batch_size=batch_size)
+            
 
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=0)
