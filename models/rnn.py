@@ -26,8 +26,8 @@ class RNN:
         self.history = None
 
     def train(self, RNN_architecture=LSTM, activation="sigmoid", \
-              optimizer='adam', epochs=5, batch_size=64, dropout=None):
-        self.model.add(RNN_architecture(200))
+              optimizer='adam', epochs=5, batch_size=64, dropout=None, units=200):
+        self.model.add(RNN_architecture(units))
 
         if dropout is not None:
             self.model.add(Dropout(rate=dropout))
