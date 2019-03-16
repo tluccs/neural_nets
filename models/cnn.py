@@ -2,14 +2,22 @@ import tensorflow as tf
 from tensorflow import keras
 
 class CNN:
-    def __init__(self, X_train, y_train, X_val, y_val, X_test, y_test, samples=1000, downsample=1):
+    def __init__(self, X_train, y_train, X_val, y_val, X_test, y_test, start=0, end=1000, downsample=1):
 
-        self.X_train = X_train[:,:,:samples:downsample]
+        self.X_train = X_train[:,:,start:end:downsample]
         self.y_train = y_train
-        self.X_val = X_val[:,:,:samples:downsample]
+        self.X_val = X_val[:,:,start:end:downsample]
         self.y_val = y_val
-        self.X_test = X_test[:,:,:samples:downsample]
+        self.X_test = X_test[:,:,start:end:downsample]
         self.y_test = y_test
+        # add back some missing data
+        """for i in range(1, int(downsample/4)):
+            self.X_train = np.concatenate((self.X_train, X_train[:,:,start+i:end:downsample]), axis=0)
+            self.X_val = np.concatenate((self.X_val, X_val[:,:,start+i:end:downsample]), axis=0)
+            self.y_train = np.concatenate((self.y_train, y_train))
+            self.y_val = np.concatenate((self.y_val, y_val))
+
+        print (self.X_train.shape)"""
 
         # Initialize Keras model
         self.model = keras.Sequential()
