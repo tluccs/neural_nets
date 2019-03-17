@@ -41,12 +41,13 @@ class RNN:
         self.history = None
 
     def train(self, RNN_architecture=LSTM, activation="sigmoid", \
-              optimizer='adam', epochs=5, batch_size=64, dropout=None, units=200, stride=2):
-       
+              optimizer='adam', epochs=5, batch_size=64, dropout=None, units=200, stride=1):
+        
         self.model.add(Permute((2,1)))
-        self.model.add(RNN_architecture(units))
-        self.model.add(Activation('relu'))
-        self.model.add(Dense(300, activation='relu'))
+        self.model.add(RNN_architecture(units, activation='tanh'))
+        if dropout is not None:
+            self.model.add(Dropout(rate=dropout))
+        self.model.add(Dense(300, activation='tanh'))
         if dropout is not None:
             self.model.add(Dropout(rate=dropout))
         self.model.add(Dense(4, activation=activation))
@@ -62,6 +63,9 @@ class RNN:
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=0)
     
+    def evaluate_validation(self):
+        return self.model.evaluate(self.X_val, self.y_val, verbose=0)
+
     def predict(self, X_data):
         return self.model.predict(X_data)
 

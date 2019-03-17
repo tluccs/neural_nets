@@ -17,8 +17,9 @@ class Autoencoder:
 
     def train(self, optimizer='adam', epochs=5, encoded_dim=2200):
         self.model.add(keras.layers.Flatten())
-        self.model.add(keras.layers.Dense(encoded_dim, activation='relu'))
-        self.model.add(keras.layers.Dense(encoded_dim, activation='relu'))
+        self.model.add(keras.layers.Dense(int(encoded_dim*1.5), activation='tanh'))
+        self.model.add(keras.layers.Dense(encoded_dim, activation='tanh'))
+        self.model.add(keras.layers.Dense(int(encoded_dim*1.5), activation='tanh'))
         self.model.add(keras.layers.Dense(22000))
         self.model.add(keras.layers.Reshape((22, 1000)))
         self.model.compile(optimizer=optimizer, loss='mse', metrics=['accuracy'])
