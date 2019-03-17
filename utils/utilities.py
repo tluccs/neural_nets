@@ -38,5 +38,17 @@ def get_more_trials(X_data, y_data, Ns=[300,350,400]):
 		y_train_total = np.concatenate((y_train_total, y_data), axis=0)
 	return X_train_total, y_train_total
 
+def fft_electrode_data(X):
+    L = 4000 # Signal length
+    Fs = 250 # sampling freq
+    NFFT = Fs//2
 
-	
+    X = np.fft.fft(X, NFFT)
+
+    Px = X * np.conj(X) / (NFFT * L)
+    f = Fs/NFFT * np.arange(0, NFFT)
+
+    f = f[f <= Fs//2 + 1]
+    Px = Px[0:f.shape[0]]
+
+    return Px, f
