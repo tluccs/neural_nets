@@ -48,5 +48,8 @@ class CNN:
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=1)
 
+    def evaluate_validation(self):
+        return self.model.evaluate(self.X_val, self.y_val, verbose=0)
+		
     def show_model(self):
         print(self.model.summary())
