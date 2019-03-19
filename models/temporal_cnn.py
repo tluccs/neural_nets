@@ -3,7 +3,7 @@ from tensorflow import keras
 
 
 class TEMPORAL_CNN:
-    def __init__(self, X_train, y_train, X_val, y_val, X_test, y_test, channel_pos='channels_last',dropout=0.0,use_elu=False,use_batchnorm=False):
+    def __init__(self, X_train, y_train, X_val, y_val, X_test, y_test,dropout=0.0,use_elu=False,use_batchnorm=False):
 
         self.X_train = X_train
         self.y_train = y_train
@@ -11,7 +11,6 @@ class TEMPORAL_CNN:
         self.y_val = y_val
         self.X_test = X_test
         self.y_test = y_test
-        self.channel_pos = channel_pos
         self.dropout=dropout
         self.use_elu = use_elu
         self.use_batchnorm = use_batchnorm
@@ -20,51 +19,27 @@ class TEMPORAL_CNN:
         self.model = keras.Sequential()
 
     def train(self, stride=1, optimizer='adam', epochs=5):
-        # self.model.add(keras.layers.Conv2DTranspose(128, 25, padding='valid', input_shape=(5, 5, 64)))
-        # if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        # self.model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
-        # self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        # self.model.add(keras.layers.Dropout(self.dropout))
 
-        self.model.add(keras.layers.Conv2D(512, 2, strides=stride))
+        self.model.add(keras.layers.Conv2D(40, (1,25), strides=stride))
         if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
         # self.model.add(keras.layers.MaxPooling2D(pool_size=(1, 1)))
         self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
         self.model.add(keras.layers.Dropout(self.dropout))
 
-        self.model.add(keras.layers.Conv2D(256, 2, strides=stride))
+        self.model.add(keras.layers.Conv2D(40, (22,1), strides=stride))
         if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
         # self.model.add(keras.layers.MaxPooling2D(pool_size=(1, 1)))
         self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
         self.model.add(keras.layers.Dropout(self.dropout))
 
-        self.model.add(keras.layers.Conv2D(128, 1, strides=stride))
-        if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        # self.model.add(keras.layers.MaxPooling2D(pool_size=(2, 2)))
-        self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        self.model.add(keras.layers.Dropout(self.dropout))
+        self.model.add(keras.layers.AveragePooling2D(pool_size=(1, 75)))
 
         self.model.add(keras.layers.Flatten())
 
-        self.model.add(keras.layers.Dense(1024))
-        if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        self.model.add(keras.layers.Dropout(self.dropout))
-
-        self.model.add(keras.layers.Dense(512))
-        if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        self.model.add(keras.layers.Dropout(self.dropout))
-
-        self.model.add(keras.layers.Dense(256))
-        if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        self.model.add(keras.layers.Dropout(self.dropout))
-
-        self.model.add(keras.layers.Dense(100))
-        if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
-        self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
-        self.model.add(keras.layers.Dropout(self.dropout))
+        # self.model.add(keras.layers.Dense(512))
+        # if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
+        # self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
+        # self.model.add(keras.layers.Dropout(self.dropout))
 
         self.model.add(keras.layers.Dense(4))
         self.model.add(keras.layers.Activation('softmax'))
