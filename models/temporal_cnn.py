@@ -18,7 +18,7 @@ class TEMPORAL_CNN:
         # Initialize Keras model
         self.model = keras.Sequential()
 
-    def train(self, stride=1, optimizer='adam', epochs=5):
+    def build_model(self, stride=1, optimizer='adam', input_shape=(1904, 22,1000,1)):
 
         self.model.add(keras.layers.Conv2D(40, (1,25), strides=stride))
         if self.use_batchnorm: self.model.add(keras.layers.BatchNormalization())
@@ -32,7 +32,7 @@ class TEMPORAL_CNN:
         self.model.add(keras.layers.Activation('elu' if self.use_elu else 'relu'))
         self.model.add(keras.layers.Dropout(self.dropout))
 
-        self.model.add(keras.layers.AveragePooling2D(pool_size=(1, 75)))
+        self.model.add(keras.layers.AveragePooling2D(pool_size=(1, 45)))
 
         self.model.add(keras.layers.Flatten())
 
@@ -45,10 +45,13 @@ class TEMPORAL_CNN:
         self.model.add(keras.layers.Activation('softmax'))
 
         self.model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-        self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), epochs=epochs)
+        # self.model.build(input_shape=input_shape)
 
     def evaluate(self):
         return self.model.evaluate(self.X_test, self.y_test, verbose=1)
+
+    def train(self, epochs=5):
+        self.history = self.model.fit(self.X_train, self.y_train, validation_data=(self.X_val, self.y_val), epochs=epochs)
 
     def show_model(self):
         print(self.model.summary())
